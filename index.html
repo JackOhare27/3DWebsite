@@ -4,11 +4,65 @@
         <meta charset="utf-8">
         <title>Jack O'Hare</title>
         <style>
+            .heady {
+                text-align: center;
+                color: white;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                font-size: 500%;
+            }
+            .subheady
+            {
+                color: grey; 
+                text-align: center;
+                border-bottom: 1px solid white;
+            }
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                background-color: #0e6bc2;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+            .dropdown-content a {
+                color: rgb(255, 255, 255);
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+            .dropdown-content a:hover {background-color: #f1f1f1;}
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+            .dropdown:hover .dropbtn {
+                background-color: #3e8e41;
+            }
+
+
+            body {background-color: black;}
             body {margin:0;}
         </style>
     </head>
 
     <body>
+        <div class="dropdown">
+            <img src="Media\menu-blue.png" alt="Select dropdown" width="50" height="50">
+            <div class="dropdown-content" style="left:0;">
+                <a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="#">Link 3</a>
+            </div>
+        </div>
+
+
+
+        <h1 class="heady">Jack O'Hare</h1>
+        <h2 class="subheady">Software Engineer, Game Developer, Brass Performer</h2>
         <script type="module" src="/main.js"></script>
     </body>
 </html>
