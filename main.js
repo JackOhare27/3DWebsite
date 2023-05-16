@@ -8,6 +8,8 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 const pointer = new THREE.Vector2();
 let INTERSECTED;
 let raycaster;
+let tagNum = 0;
+let vid1 = document.getElementById('vid1');
 
 
 // Add a cube to the scene
@@ -16,11 +18,13 @@ const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
 const mesh = new THREE.Mesh(geometry, material);
 mesh.position.set(0, 0, 0);
 scene.add(mesh);
+
 //face 1
 const geometry1 = new THREE.BoxGeometry(3, 3, .2); // width, height, depth
 const material1 = new THREE.MeshLambertMaterial({ color: 0xffff00 });
 const mesh1 = new THREE.Mesh(geometry1, material1);
 mesh1.position.set(0, 0, 1.6);
+mesh1.userData.tag = "1";
 scene.add(mesh1);
 
 //face 2
@@ -28,6 +32,7 @@ const geometry2 = new THREE.BoxGeometry(.2, 3, 3); // width, height, depth
 const material2 = new THREE.MeshLambertMaterial({ color: 0xffff00 });
 const mesh2 = new THREE.Mesh(geometry2, material2);
 mesh2.position.set(1.6, 0, 0);
+mesh2.userData.tag = "2";
 scene.add(mesh2);
 
 //face 3
@@ -35,12 +40,19 @@ const geometry3 = new THREE.BoxGeometry(3, 3, .2); // width, height, depth
 const material3 = new THREE.MeshLambertMaterial({ color: 0xffff00 });
 const mesh3 = new THREE.Mesh(geometry3, material3);
 mesh3.position.set(0, 0, -1.6);
+mesh3.userData.tag = "3";
 scene.add(mesh3);
 
 //face 4
-const mesh4 = new THREE.Mesh(geometry2, material1);
+const geometry4 = new THREE.BoxGeometry(.2, 3, 3); // width, height, depth
+const material4 = new THREE.MeshLambertMaterial({ color: 0xffff00 });
+const mesh4 = new THREE.Mesh(geometry4, material4);
 mesh4.position.set(-1.6, 0, 0);
+mesh4.userData.tag = "4";
 scene.add(mesh4);
+
+
+const objects = {mesh1,mesh2,mesh3,mesh4};
 
 // Set up lights
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -56,7 +68,7 @@ const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.inner
 
 // Movement
 const controls = new OrbitControls(camera,renderer.domElement);
-controls.addEventListener( 'change', renderer ); // add this only if there is no animation loop (requestAnimationFrame)
+
 //controls.listenToKeyEvents(window); //use when no animation
 //controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
 //controls.dampingFactor = 0.05;
@@ -98,21 +110,52 @@ function animate() {
 	//raycast pointing
 	raycaster.setFromCamera(new THREE.Vector2(), camera);
 	//checks if something intersects it (any object)
-	const intersects = raycaster.intersectObject(mesh1,false);
+	const intersects = raycaster.intersectObjects(scene.children,false);
 	
 	if(intersects.length > 0)
 	{
 		//if the name of nothing does not equal nothing
 		if(INTERSECTED != intersects[0].object)
 		{
+			/*
 			if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
 
 			INTERSECTED = intersects[ 0 ].object;
 			INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-			INTERSECTED.material.emissive.setHex( 0x00ffff );	
+			INTERSECTED.material.emissive.setHex( 0xff0000 );	
+			
+			*/
+			if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+			INTERSECTED = intersects[ 0 ].object;
+			tagNum = Number(INTERSECTED.userData.tag);
+			console.log(tagNum);
+			switch(tagNum)
+			{
+				case 1:
+					//INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+					//INTERSECTED.material.emissive.setHex( 0xffff00 );	
+					break;
+				case 2:
+					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+					INTERSECTED.material.emissive.setHex( 0xff00ff );	
+					break;
+				case 3:
+					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+					INTERSECTED.material.emissive.setHex( 0xffffff);	
+					break;
+
+				case 4:
+					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+					INTERSECTED.material.emissive.setHex( 0x00ff00 );	
+					break;
+			}
+
+
 		}
 	} else //if not there, turn back to normal hue
 	{
+		console.log("turn off");
 		if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
 
 		INTERSECTED = null;
