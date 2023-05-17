@@ -1,15 +1,14 @@
 import * as THREE from "three";
 //import Stats from "/node_modules/three/examples/jsm/libs/stats.module.js"; use for frames stats
+import {CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // Scene
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 //raycast needs
-const pointer = new THREE.Vector2();
 let INTERSECTED;
 let raycaster;
 let tagNum = 0;
-let vid1 = document.getElementById('vid1');
 
 
 // Add a cube to the scene
@@ -51,8 +50,18 @@ mesh4.position.set(-1.6, 0, 0);
 mesh4.userData.tag = "4";
 scene.add(mesh4);
 
+//create each face of the program
+const p = document.createElement("div");
 
-const objects = {mesh1,mesh2,mesh3,mesh4};
+
+
+//label renderer
+const labelRenderer =  new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth, window.innerHeight)
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.color = "white";
+labelRenderer.domElement.style.pointerEvents = 'none'
+document.body.appendChild(labelRenderer.domElement);
 
 // Set up lights
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -62,28 +71,28 @@ const directionalLight = new THREE.DirectionalLight(0x000000, 0.6);
 directionalLight.position.set(10, 20, 0); // x, y, z
 scene.add(directionalLight);
 
+
+
 // Camera
-const width = 10;
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
 // Movement
 const controls = new OrbitControls(camera,renderer.domElement);
-
-//controls.listenToKeyEvents(window); //use when no animation
-//controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-//controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
 controls.enablePan = false;
 controls.enableZoom = false;
 controls.maxPolarAngle = Math.PI / 2;
+
 //raycast creation
 raycaster = new THREE.Raycaster();
 
 //camera initial placement
 camera.position.set(4, 4, 4);
 camera.lookAt(0, 0, 0);
+
 //window resizements
 window.addEventListener( 'resize', onWindowResize );
+
 // Renderer
 renderer.setSize(window.innerWidth, window.innerHeight);
 animate();
@@ -99,6 +108,7 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
+	labelRenderer.setSize(this.window.innerWidth, this.window.innerHeight);
 
 }
 
@@ -117,35 +127,48 @@ function animate() {
 		//if the name of nothing does not equal nothing
 		if(INTERSECTED != intersects[0].object)
 		{
-			/*
-			if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-
-			INTERSECTED = intersects[ 0 ].object;
-			INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-			INTERSECTED.material.emissive.setHex( 0xff0000 );	
-			
-			*/
 			if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
 
 			INTERSECTED = intersects[ 0 ].object;
 			tagNum = Number(INTERSECTED.userData.tag);
 			console.log(tagNum);
+			
 			switch(tagNum)
 			{
 				case 1:
-					//INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-					//INTERSECTED.material.emissive.setHex( 0xffff00 );	
+					p.innerHTML = '<video width="320" height="240" autoplay muted> <source src="Media\\vid1.mp4" type="video/mp4"> Your browser does not support the video tag. </video> ';
+					//p.textContent = 'hello'; 
+					const cPointLabel = new CSS2DObject(p);
+					scene.add(cPointLabel);
+					cPointLabel.position.set(0,0,2);
+					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+					INTERSECTED.material.emissive.setHex( 0xffff00 );	
 					break;
 				case 2:
+					p.innerHTML = '<video width="320" height="240" autoplay muted> <source src="Media\\vid1.mp4" type="video/mp4"> Your browser does not support the video tag. </video> ';
+					//p.textContent = 'hello'; 
+					const dPointLabel = new CSS2DObject(p);
+					scene.add(dPointLabel);
+					dPointLabel.position.set(2,0,0);
 					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
 					INTERSECTED.material.emissive.setHex( 0xff00ff );	
 					break;
 				case 3:
+					p.innerHTML = '<video width="320" height="240" autoplay muted> <source src="Media\\vid1.mp4" type="video/mp4"> Your browser does not support the video tag. </video> ';
+					//p.textContent = 'hello'; 
+					const ePointLabel = new CSS2DObject(p);
+					scene.add(ePointLabel);
+					ePointLabel.position.set(0,0,-2);
 					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
 					INTERSECTED.material.emissive.setHex( 0xffffff);	
 					break;
 
 				case 4:
+					p.innerHTML = '<video width="320" height="240" autoplay muted> <source src="Media\\vid1.mp4" type="video/mp4"> Your browser does not support the video tag. </video> ';
+					//p.textContent = 'hello'; 
+					const fPointLabel = new CSS2DObject(p);
+					scene.add(fPointLabel);
+					fPointLabel.position.set(-2,0,0);
 					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
 					INTERSECTED.material.emissive.setHex( 0x00ff00 );	
 					break;
@@ -155,11 +178,16 @@ function animate() {
 		}
 	} else //if not there, turn back to normal hue
 	{
-		console.log("turn off");
-		if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-
+		if ( INTERSECTED ) 
+		{
+			INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+			console.log("balls");
+		}
+		p.innerHTML = "<p> nothing</p>"
+	
 		INTERSECTED = null;
 	}
+	labelRenderer.render(scene, camera);
 	renderer.render( scene, camera );
 }
 

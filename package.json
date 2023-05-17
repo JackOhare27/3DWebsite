@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "three": "^0.152.2",
+    "three": "github:mrdoob/three.js",
     "three-orbit-controls": "^82.1.0"
   },
   "devDependencies": {
